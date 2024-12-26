@@ -2,6 +2,7 @@ from flask import request, make_response, redirect, render_template, session, ur
 import unittest
 from app import create_app
 from app.forms import LoginForm
+from app.firestore_service import get_users
 
 app = create_app()
 
@@ -41,15 +42,11 @@ def hello():
     context = {
         'user_ip' : user_ip,
         'todos' : todos,
-        'login_form': login_form,
         'username': username
         }
     
-    if login_form.validate_on_submit():
-        username = login_form.username.data
-        session['username'] = username
-        flash('Nombre de usuario registrado correctamente.')
-        return redirect(url_for('index'))
-
+    users = get_users()
+    for user in users:
+        print()
 
     return render_template('hello.html',**context)
